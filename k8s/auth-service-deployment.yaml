@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: auth-service-deployment
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: auth-service
+    spec:
+      containers:
+      - name: auth-service
+        image: newmaster/auth-service-tts:v2
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+      - name: mongo
+        image: library/mongo
+        ports:
+        - containerPort: 27017
+          protocol: TCP
