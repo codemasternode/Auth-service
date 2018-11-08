@@ -1,22 +1,22 @@
 const lodash = require('lodash')
-const { addUser } = require('../../services/authService')
+const { addUser, loginUser } = require('../services/authService')
 
 exports.login = (req, res) => {
-    res.send('This is login')
+    let user = req.body
+    loginUser(user, (token) => {
+        res.send({ token })
+    }, () => {
+        res.status(401).send()
+    })
 }
 
 exports.register = (req, res) => {
-    console.log(req.body,'body')
     let user = lodash.pick(req.body, ['username', 'password', 'name', 'surname'])
-    console.log(user)
     addUser(user)
         .then((doc) => {
-            if (doc) {
-                res.send(doc)
-            }
-        }).catch((err) => {
-            if (err) {
-                res.send().status(400)
-            }
+            console.log(doc)
+            return res.send(doc)
+        }).catch(() => {
+            return res.send(401, {})
         })
 }
